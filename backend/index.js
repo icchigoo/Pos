@@ -10,7 +10,9 @@ const groupRoute = require("./routes/groupRoute");
 const categoryRoute = require("./routes/categoryRoute");
 const productRoute = require('./routes/productRoute');
 const stock_adjustmentRoute = require('./routes/stock_adjustmentRoute')
-const supplierRoute = require('./routes/supplierRoute')
+const membershiptypeRoute = require('./routes/membershiptypeRoute');
+const supplierRoute = require('./routes/supplierRoute');
+const taxRoute = require('./routes/taxRoute');
 
 
 const cookieParser = require("cookie-parser");
@@ -26,9 +28,11 @@ app.use(cookieParser());
 app.use("/api/user", authRouter);
 app.use("/api/group", groupRoute);
 app.use("/api/category", categoryRoute);
+app.use("/api/supplier", supplierRoute);
 app.use("/api/product",productRoute );
 app.use("/api/stock",stock_adjustmentRoute );
-app.use("/api/stock",supplierRoute );
+app.use("/api/membershiptype",membershiptypeRoute );
+app.use("/api/taxRoute",taxRoute );
 
 
 
