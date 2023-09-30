@@ -8,6 +8,7 @@ const PORT = 5000;
 const authRouter = require("./routes/authRoute");
 const groupRoute = require("./routes/groupRoute");
 const categoryRoute = require("./routes/categoryRoute");
+const productRoute = require('./routes/productRoute');
 
 
 const cookieParser = require("cookie-parser");
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use("/api/user", authRouter);
 app.use("/api/group", groupRoute);
 app.use("/api/category", categoryRoute);
+app.use("/api/product",productRoute );
 
 
 
