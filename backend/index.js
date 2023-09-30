@@ -9,6 +9,7 @@ const authRouter = require("./routes/authRoute");
 const groupRoute = require("./routes/groupRoute");
 const categoryRoute = require("./routes/categoryRoute");
 const productRoute = require('./routes/productRoute');
+const stock_adjustmentRoute = require('./routes/stock_adjustmentRoute')
 
 
 const cookieParser = require("cookie-parser");
@@ -25,6 +26,7 @@ app.use("/api/user", authRouter);
 app.use("/api/group", groupRoute);
 app.use("/api/category", categoryRoute);
 app.use("/api/product",productRoute );
+app.use("/api/stock",stock_adjustmentRoute );
 
 
 
