@@ -6,11 +6,7 @@ const app = express();
 const dotenv = require("dotenv").config();
 const PORT = 5000;
 const authRouter = require("./routes/authRoute");
-const ServiceRouter = require("./routes/serviceRoute");
-const membershipTypeRouter = require("./routes/memberShipTypeRoute");
-const memberRoute = require("./routes/memberRoute");
-const companyRoute = require("./routes/companyRoute");
-const transactionRoute = require ("./routes/transactionRoute");
+const groupRoute = require("./routes/groupRoute");
 
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
@@ -23,12 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/api/user", authRouter);
-
-app.use("/api/service", ServiceRouter);
-app.use("/api/membershipType", membershipTypeRouter)
-app.use("/api/member", memberRoute)
-app.use("/api/company", companyRoute)
-app.use("/api/transaction", transactionRoute)
+app.use("/api/group", groupRoute)
 
 
 
