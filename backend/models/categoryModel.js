@@ -11,30 +11,29 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// Create the "groups" table if it doesn't exist
-const createGroupsTable = async () => {
+// Create the "categories" table if it doesn't exist
+const createCategoriesTable = async () => {
   try {
     const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS groups (
-        group_id INT PRIMARY KEY AUTO_INCREMENT,
-        group_name VARCHAR(255) NOT NULL,
-        group_desc VARCHAR(255),
+      CREATE TABLE IF NOT EXISTS categories (
+        category_id INT PRIMARY KEY AUTO_INCREMENT,
+        category_name VARCHAR(255) NOT NULL,
+        category_desc VARCHAR(255),
         status VARCHAR(255) DEFAULT 'active',
-        user_id INT,
+        group_id INT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-        
+        FOREIGN KEY (group_id) REFERENCES groups(group_id)
       )
     `;
     await pool.query(createTableQuery);
-    console.log("Groups table created or already exists");
+    console.log("Categories table created or already exists");
   } catch (error) {
-    console.error("Error creating groups table:", error);
+    console.error("Error creating categories table:", error);
   }
 };
 
-// Export the function to create the groups table
+// Export the function to create the categories table
 module.exports = {
-  createGroupsTable,
+  createCategoriesTable,
 };
