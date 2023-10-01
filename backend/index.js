@@ -13,6 +13,12 @@ const stock_adjustmentRoute = require('./routes/stock_adjustmentRoute')
 const membershiptypeRoute = require('./routes/membershiptypeRoute');
 const supplierRoute = require('./routes/supplierRoute');
 const taxRoute = require('./routes/taxRoute');
+const openingRoute = require('./routes/openingRoute');
+const purchaseRoute = require('./routes/purchaseRoute');
+const customerRoute = require('./routes/customerRoute')
+const salesRoute = require('./routes/salesRoute');
+const inventorystockRoute = require('./routes/inventorystockRoute');
+const companyRoute = require('./routes/companyRoute');
 
 
 const cookieParser = require("cookie-parser");
@@ -33,6 +39,12 @@ app.use("/api/product",productRoute );
 app.use("/api/stock",stock_adjustmentRoute );
 app.use("/api/membershiptype",membershiptypeRoute );
 app.use("/api/taxRoute",taxRoute );
+app.use("/api/opening", openingRoute)
+app.use("/api/purchase", purchaseRoute);
+app.use("/api/customer",customerRoute);
+app.use("/api/sales", salesRoute);
+app.use('./api/inventory', inventorystockRoute);
+app.use('./api/company', companyRoute);
 
 
 
