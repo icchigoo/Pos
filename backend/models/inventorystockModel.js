@@ -21,15 +21,15 @@ const createInventoryStockTable = async () => {
         stock_qty INT NOT NULL,
         purchase_rate DECIMAL(10, 2) NOT NULL,
         total_purchased_balance DECIMAL(10, 2) NOT NULL,
-        stock_adjustment_id INT,
+        stock_adj_id INT,
         sales_id INT,
         total_stock_qty INT NOT NULL,
         total_stock_balance DECIMAL(10, 2) NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (product_id) REFERENCES products(product_id),
-        FOREIGN KEY (stock_adjustment_id) REFERENCES stock_adjustment(stock_adjustment_id),
-        FOREIGN KEY (sales_id) REFERENCES sales(sales_id)
+        FOREIGN KEY (product_id) REFERENCES products(product_id), -- Replace with the actual referenced table
+        FOREIGN KEY (stock_adj_id) REFERENCES stock_adjustment(stock_adj_id), -- Replace with the actual referenced table
+        FOREIGN KEY (sales_id) REFERENCES sales(sale_id) -- Replace with the actual referenced table
       )
     `;
     await pool.query(createTableQuery);

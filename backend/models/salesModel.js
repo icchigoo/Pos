@@ -27,7 +27,7 @@ const createSalesTable = async () => {
         sales_date DATE NOT NULL,
         payment_method VARCHAR(255) NOT NULL,
         FOREIGN KEY (product_id) REFERENCES products(product_id),
-        FOREIGN KEY (tax_id) REFERENCES taxes(tax_id),
+        FOREIGN KEY (tax_id) REFERENCES tax(tax_id),
         FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
       )
     `;
