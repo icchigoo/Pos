@@ -20,7 +20,7 @@ const createInventoryStock = asyncHandler(async (req, res) => {
       stock_qty,
       purchase_rate,
       total_purchased_balance,
-      stock_adjustment_id,
+      stock_adj_id,
       sales_id,
       total_stock_qty,
       total_stock_balance,
@@ -28,13 +28,13 @@ const createInventoryStock = asyncHandler(async (req, res) => {
 
     // Insert the inventory stock record into the inventory_stock table
     const [result] = await pool.query(
-      "INSERT INTO inventory_stock (product_id, stock_qty, purchase_rate, total_purchased_balance, stock_adjustment_id, sales_id, total_stock_qty, total_stock_balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO inventory_stock (product_id, stock_qty, purchase_rate, total_purchased_balance, stock_adj_id, sales_id, total_stock_qty, total_stock_balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       [
         product_id,
         stock_qty,
         purchase_rate,
         total_purchased_balance,
-        stock_adjustment_id,
+        stock_adj_id,
         sales_id,
         total_stock_qty,
         total_stock_balance,
