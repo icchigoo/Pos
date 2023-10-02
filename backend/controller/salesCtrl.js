@@ -33,7 +33,7 @@ const createSale = asyncHandler(async (req, res) => {
     );
 
     const [taxRows] = await pool.query(
-      "SELECT tax_id FROM taxes WHERE tax_id = ?",
+      "SELECT tax_id FROM tax WHERE tax_id = ?",
       [tax_id]
     );
 
