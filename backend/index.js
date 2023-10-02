@@ -43,8 +43,8 @@ app.use("/api/opening", openingRoute)
 app.use("/api/purchase", purchaseRoute);
 app.use("/api/customer",customerRoute);
 app.use("/api/sales", salesRoute);
-app.use('./api/inventory', inventorystockRoute);
-app.use('./api/company', companyRoute);
+app.use('/api/inventory', inventorystockRoute);
+app.use('/api/company', companyRoute);
 
 
 
