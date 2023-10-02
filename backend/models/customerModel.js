@@ -23,7 +23,9 @@ const createCustomersTable = async () => {
         phone VARCHAR(255) NOT NULL,
         address VARCHAR(255) NOT NULL,
         membership_id INT,
-        FOREIGN KEY (membership_id) REFERENCES membership_type(membership_id)
+        user_id INT,
+        FOREIGN KEY (membership_id) REFERENCES membership_type(membership_id),
+        FOREIGN KEY (user_id) REFERENCES users(id)
       )
     `;
     await pool.query(createTableQuery);
