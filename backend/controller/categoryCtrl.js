@@ -32,9 +32,10 @@ const createCategory = asyncHandler(async (req, res) => {
     } else {
       // Insert the category into the categories table and associate it with the group
       const [result] = await pool.query(
-        "INSERT INTO categories (category_name, category_desc, status, group_id) VALUES (?, ?, ?, ?)",
-        [category_name, category_desc, status, group_id]
+        "INSERT INTO categories (category_name, category_desc, group_id) VALUES (?, ?, ?)",
+        [category_name, category_desc, group_id]
       );
+      
 
       if (result.affectedRows === 1) {
         const category_id = result.insertId;
