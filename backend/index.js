@@ -19,6 +19,7 @@ const customerRoute = require('./routes/customerRoute')
 const salesRoute = require('./routes/salesRoute');
 const inventorystockRoute = require('./routes/inventorystockRoute');
 const companyRoute = require('./routes/companyRoute');
+const unitRoute = require('./routes/unitRoutes');
 
 
 const cookieParser = require("cookie-parser");
@@ -45,6 +46,7 @@ app.use("/api/customer",customerRoute);
 app.use("/api/sales", salesRoute);
 app.use('/api/inventory', inventorystockRoute);
 app.use('/api/company', companyRoute);
+app.use('/api/unit', unitRoute);
 
 
 
