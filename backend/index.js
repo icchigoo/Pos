@@ -39,7 +39,7 @@ app.use("/api/supplier", supplierRoute);
 app.use("/api/product",productRoute );
 app.use("/api/stock",stock_adjustmentRoute );
 app.use("/api/membershiptype",membershiptypeRoute );
-app.use("/api/taxRoute",taxRoute );
+app.use("/api/tax",taxRoute );
 app.use("/api/opening", openingRoute)
 app.use("/api/purchase", purchaseRoute);
 app.use("/api/customer",customerRoute);

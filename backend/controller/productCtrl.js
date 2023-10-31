@@ -15,7 +15,7 @@ const pool = mysql.createPool({
 // Create a product
 const createProduct = asyncHandler(async (req, res) => {
   try {
-    const { product_name, product_desc, status, category_id } = req.body;
+    const { product_name, product_desc, status, category_id, unit_id } = req.body;
     const user_id = req.user.id; // Assuming req.user contains user information
 
     // Check if the user is the creator of the group associated with the category
@@ -30,10 +30,10 @@ const createProduct = asyncHandler(async (req, res) => {
         message: "You are not authorized to create a product for this category",
       });
     } else {
-      // Insert the product into the products table and associate it with the category
+      // Insert the product into the products table and associate it with the category and unit
       const [result] = await pool.query(
-        "INSERT INTO products (product_name, product_desc, status, category_id) VALUES (?, ?, ?, ?)",
-        [product_name, product_desc, status, category_id]
+        "INSERT INTO products (product_name, product_desc, status, category_id, unit_id) VALUES (?, ?, ?, ?, ?)",
+        [product_name, product_desc, status, category_id, unit_id]
       );
 
       if (result.affectedRows === 1) {
@@ -93,7 +93,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 const editProduct = asyncHandler(async (req, res) => {
   try {
     const product_id = req.params.id; // Extract product_id from URL parameter
-    const { product_name, product_desc, status, category_id } = req.body;
+    const { product_name, product_desc, status, category_id, unit_id } = req.body;
     const user_id = req.user.id; // Assuming req.user contains user information
 
     // Check if the user is the creator of the category associated with the product
@@ -110,8 +110,8 @@ const editProduct = asyncHandler(async (req, res) => {
     } else {
       // Update the product in the products table, including the 'status' field
       const [result] = await pool.query(
-        "UPDATE products SET product_name = ?, product_desc = ?, status = ?, category_id = ? WHERE product_id = ?",
-        [product_name, product_desc, status, category_id, product_id]
+        "UPDATE products SET product_name = ?, product_desc = ?, status = ?, category_id = ?, unit_id = ? WHERE product_id = ?",
+        [product_name, product_desc, status, category_id, unit_id, product_id]
       );
 
       if (result.affectedRows === 1) {

@@ -21,9 +21,11 @@ const createProductsTable = async () => {
         product_desc VARCHAR(255),
         status VARCHAR(255) DEFAULT 'active',
         category_id INT,
+        unit_id INT,  -- Add a unit_id field for the foreign key relationship
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (category_id) REFERENCES categories(category_id)
+        FOREIGN KEY (category_id) REFERENCES categories(category_id),
+        FOREIGN KEY (unit_id) REFERENCES unit(unit_id)  -- Add a foreign key constraint to the unit table
       )
     `;
     await pool.query(createTableQuery);

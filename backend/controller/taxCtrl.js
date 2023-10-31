@@ -17,10 +17,9 @@ const createTax = asyncHandler(async (req, res) => {
     const user_id = req.user.id;
 
     const [result] = await pool.query(
-      "INSERT INTO tax (tax_name, tax_desc, user_id) VALUES (?, ?, ?)",
-      [tax_name, tax_desc, user_id]
+      "INSERT INTO tax (tax_name, tax_desc, user_id, status) VALUES (?, ?, ?, ?)",
+      [tax_name, tax_desc, user_id, 'inactive'] 
     );
-
     if (result.affectedRows === 1) {
       const tax_id = result.insertId;
       res.status(201).json({
@@ -86,8 +85,8 @@ const editTax = asyncHandler(async (req, res) => {
       });
     } else {
       const [result] = await pool.query(
-        "UPDATE tax SET tax_name = ?, tax_desc = ? WHERE tax_id = ?",
-        [tax_name, tax_desc, tax_id]
+        "UPDATE tax SET tax_name = ?, tax_desc = ?, status = ? WHERE tax_id = ?",
+        [tax_name, tax_desc, 'inactive', tax_id] 
       );
 
       if (result.affectedRows === 1) {

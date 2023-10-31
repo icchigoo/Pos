@@ -13,12 +13,12 @@ const pool = mysql.createPool({
 
 const createMembershipType = asyncHandler(async (req, res) => {
   try {
-    const { membership_name, percentage } = req.body;
+    const { membership_name, percentage, status } = req.body;
     const user_id = req.user.id;
 
     const [result] = await pool.query(
-      "INSERT INTO membership_type (membership_name, percentage, user_id) VALUES (?, ?, ?)",
-      [membership_name, percentage, user_id]
+      "INSERT INTO membership_type (membership_name, percentage, status, user_id) VALUES (?, ?, ?, ?)",
+      [membership_name, percentage, status, user_id]
     );
 
     if (result.affectedRows === 1) {
@@ -35,6 +35,7 @@ const createMembershipType = asyncHandler(async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
 
 const deleteMembershipType = asyncHandler(async (req, res) => {
   try {
@@ -71,7 +72,7 @@ const deleteMembershipType = asyncHandler(async (req, res) => {
 const editMembershipType = asyncHandler(async (req, res) => {
   try {
     const membership_id = req.params.id;
-    const { membership_name, percentage } = req.body;
+    const { membership_name, percentage, status } = req.body;
     const user_id = req.user.id;
 
     const [membershipRows] = await pool.query(
@@ -86,8 +87,8 @@ const editMembershipType = asyncHandler(async (req, res) => {
       });
     } else {
       const [result] = await pool.query(
-        "UPDATE membership_type SET membership_name = ?, percentage = ? WHERE membership_id = ?",
-        [membership_name, percentage, membership_id]
+        "UPDATE membership_type SET membership_name = ?, percentage = ?, status = ? WHERE membership_id = ?",
+        [membership_name, percentage, status, membership_id]
       );
 
       if (result.affectedRows === 1) {
@@ -100,6 +101,7 @@ const editMembershipType = asyncHandler(async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
 
 const fetchAllMembershipTypes = asyncHandler(async (req, res) => {
   try {
