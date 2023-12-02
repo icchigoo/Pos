@@ -17,18 +17,12 @@ const createSalesTable = async () => {
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS sales (
         sale_id INT PRIMARY KEY AUTO_INCREMENT,
-        product_id INT,
-        qty INT NOT NULL,
-        tax_id INT,
-        discount_amt DECIMAL(10, 2),
-        discount_percentage DECIMAL(5, 2),
+        products JSON,
+        discount_amt DECIMAL(10, 2) NOT NULL,
+        discount_percentage DECIMAL(5, 2) NOT NULL,
         total DECIMAL(10, 2) NOT NULL,
-        customer_id INT,
         sales_date DATE NOT NULL,
-        payment_method VARCHAR(255) NOT NULL,
-        FOREIGN KEY (product_id) REFERENCES products(product_id),
-        FOREIGN KEY (tax_id) REFERENCES tax(tax_id),
-        FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+        payment_method VARCHAR(255) NOT NULL
       )
     `;
     await pool.query(createTableQuery);
@@ -37,6 +31,7 @@ const createSalesTable = async () => {
     console.error("Error creating sales table:", error);
   }
 };
+
 
 // Export the function to create the sales table
 module.exports = {

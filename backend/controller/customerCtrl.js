@@ -22,11 +22,9 @@ const createCustomer = asyncHandler(async (req, res) => {
     );
 
     if (result.affectedRows === 1) {
-      const customer_id = result.insertId;
       res.status(201).json({
         success: true,
         message: "Customer created successfully",
-        customer_id,
       });
     } else {
       res.status(500).json({ success: false, message: "Failed to create customer" });
@@ -38,30 +36,20 @@ const createCustomer = asyncHandler(async (req, res) => {
 
 const deleteCustomer = asyncHandler(async (req, res) => {
   try {
-    const customer_id = req.params.id;
     const user_id = req.user.id;
 
-    const [customerRows] = await pool.query(
-      "SELECT * FROM customers WHERE customer_id = ? AND user_id = ?",
+    // Assuming customer_id is provided in the request body or query parameters
+    const customer_id = req.body.customer_id || req.query.customer_id;
+
+    const [result] = await pool.query(
+      "DELETE FROM customers WHERE customer_id = ? AND user_id = ?",
       [customer_id, user_id]
     );
 
-    if (customerRows.length === 0) {
-      res.status(403).json({
-        success: false,
-        message: "You are not authorized to delete this customer",
-      });
+    if (result.affectedRows === 1) {
+      res.json({ success: true, message: "Customer deleted successfully" });
     } else {
-      const [result] = await pool.query(
-        "DELETE FROM customers WHERE customer_id = ?",
-        [customer_id]
-      );
-
-      if (result.affectedRows === 1) {
-        res.json({ success: true, message: "Customer deleted successfully" });
-      } else {
-        res.status(404).json({ success: false, message: "Customer not found" });
-      }
+      res.status(404).json({ success: false, message: "Customer not found" });
     }
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -70,31 +58,21 @@ const deleteCustomer = asyncHandler(async (req, res) => {
 
 const editCustomer = asyncHandler(async (req, res) => {
   try {
-    const customer_id = req.params.id;
     const { first_name, last_name, email, phone, address, membership_id } = req.body;
     const user_id = req.user.id;
 
-    const [customerRows] = await pool.query(
-      "SELECT * FROM customers WHERE customer_id = ? AND user_id = ?",
-      [customer_id, user_id]
+    // Assuming customer_id is provided in the request body or query parameters
+    const customer_id = req.body.customer_id || req.query.customer_id;
+
+    const [result] = await pool.query(
+      "UPDATE customers SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, membership_id = ? WHERE customer_id = ? AND user_id = ?",
+      [first_name, last_name, email, phone, address, membership_id, customer_id, user_id]
     );
 
-    if (customerRows.length === 0) {
-      res.status(403).json({
-        success: false,
-        message: "You are not authorized to edit this customer",
-      });
+    if (result.affectedRows === 1) {
+      res.json({ success: true, message: "Customer updated successfully" });
     } else {
-      const [result] = await pool.query(
-        "UPDATE customers SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, membership_id = ? WHERE customer_id = ?",
-        [first_name, last_name, email, phone, address, membership_id, customer_id]
-      );
-
-      if (result.affectedRows === 1) {
-        res.json({ success: true, message: "Customer updated successfully" });
-      } else {
-        res.status(404).json({ success: false, message: "Customer not found" });
-      }
+      res.status(404).json({ success: false, message: "Customer not found" });
     }
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

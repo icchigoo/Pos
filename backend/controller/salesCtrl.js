@@ -14,72 +14,86 @@ const pool = mysql.createPool({
 // Create a sale
 const createSale = asyncHandler(async (req, res) => {
   try {
-    const {
-      product_id,
-      qty,
-      tax_id,
-      discount_amt,
-      discount_percentage,
-      total,
-      customer_id,
-      sales_date,
-      payment_method,
-    } = req.body;
+    const { products, sales_date, payment_method, total } = req.body;
 
-    // Check if the product, tax, and customer exist (you can add more checks as needed)
-    const [productRows] = await pool.query(
-      "SELECT product_id FROM products WHERE product_id = ?",
-      [product_id]
-    );
-
-    const [taxRows] = await pool.query(
-      "SELECT tax_id FROM tax WHERE tax_id = ?",
-      [tax_id]
-    );
-
-    const [customerRows] = await pool.query(
-      "SELECT customer_id FROM customers WHERE customer_id = ?",
-      [customer_id]
-    );
-
-    if (
-      productRows.length === 0 ||
-      taxRows.length === 0 ||
-      customerRows.length === 0
-    ) {
-      res.status(400).json({
+    // Validate if the products array is not empty
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({
         success: false,
-        message: "Invalid product, tax, or customer",
+        message: "Products array is empty or invalid",
+      });
+    }
+
+    // Convert the products array to a JSON string
+    const productsJSON = JSON.stringify(products);
+
+    // Insert the sale into the sales table with discount_amt and discount_percentage
+    const [result] = await pool.query(
+      "INSERT INTO sales (products, sales_date, payment_method, total, discount_amt, discount_percentage) VALUES (?, ?, ?, ?, ?, ?)",
+      [productsJSON, sales_date, payment_method, total, req.body.discount_amt, req.body.discount_percentage]
+    );
+
+    if (result.affectedRows === 1) {
+      const sale_id = result.insertId;
+      res.status(201).json({
+        success: true,
+        message: "Sale created successfully",
+        sale_id,
       });
     } else {
-      // Insert the sale into the sales table
-      const [result] = await pool.query(
-        "INSERT INTO sales (product_id, qty, tax_id, discount_amt, discount_percentage, total, customer_id, sales_date, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-          product_id,
-          qty,
-          tax_id,
-          discount_amt,
-          discount_percentage,
-          total,
-          customer_id,
-          sales_date,
-          payment_method,
-        ]
+      res.status(500).json({ success: false, message: "Failed to create sale" });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
+// Edit a sale
+const editSale = asyncHandler(async (req, res) => {
+  try {
+    const sale_id = req.params.id;
+    const { products, sales_date, payment_method, total } = req.body;
+
+    // Validate if the products array is not empty
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Products array is empty or invalid",
+      });
+    }
+
+    // Validate if all products exist
+    for (const { product_id } of products) {
+      const [productRows] = await pool.query(
+        "SELECT product_id FROM products WHERE product_id = ?",
+        [product_id]
       );
 
-      if (result.affectedRows === 1) {
-        const sale_id = result.insertId;
-        res.status(201).json({
-          success: true,
-          message: "Sale created successfully",
-          sale_id,
+      if (productRows.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid product with ID ${product_id}`,
         });
-      } else {
-        res
-          .status(500)
-          .json({ success: false, message: "Failed to create sale" });
       }
+    }
+
+    // Convert the products array to a JSON string
+    const productsJSON = JSON.stringify(products);
+
+    // Update the sale in the sales table with discount_amt and discount_percentage
+    const [result] = await pool.query(
+      "UPDATE sales SET products = ?, sales_date = ?, payment_method = ?, total = ?, discount_amt = ?, discount_percentage = ? WHERE sale_id = ?",
+      [productsJSON, sales_date, payment_method, total, req.body.discount_amt, req.body.discount_percentage, sale_id]
+    );
+
+    if (result.affectedRows === 1) {
+      res.json({ success: true, message: "Sale updated successfully" });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to update sale",
+      });
     }
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -91,91 +105,18 @@ const deleteSale = asyncHandler(async (req, res) => {
   try {
     const sale_id = req.params.id;
 
-    // Check if the sale exists
-    const [saleRows] = await pool.query(
-      "SELECT sale_id FROM sales WHERE sale_id = ?",
-      [sale_id]
-    );
+    // Delete the sale from the sales table
+    const [result] = await pool.query("DELETE FROM sales WHERE sale_id = ?", [
+      sale_id,
+    ]);
 
-    if (saleRows.length === 0) {
-      res.status(404).json({
-        success: false,
-        message: "Sale not found",
-      });
+    if (result.affectedRows === 1) {
+      res.json({ success: true, message: "Sale deleted successfully" });
     } else {
-      // Delete the sale from the sales table
-      const [result] = await pool.query(
-        "DELETE FROM sales WHERE sale_id = ?",
-        [sale_id]
-      );
-
-      if (result.affectedRows === 1) {
-        res.json({ success: true, message: "Sale deleted successfully" });
-      } else {
-        res.status(500).json({
-          success: false,
-          message: "Failed to delete sale",
-        });
-      }
-    }
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// Edit a sale
-const editSale = asyncHandler(async (req, res) => {
-  try {
-    const sale_id = req.params.id;
-    const {
-      product_id,
-      qty,
-      tax_id,
-      discount_amt,
-      discount_percentage,
-      total,
-      customer_id,
-      sales_date,
-      payment_method,
-    } = req.body;
-
-    // Check if the sale exists
-    const [saleRows] = await pool.query(
-      "SELECT sale_id FROM sales WHERE sale_id = ?",
-      [sale_id]
-    );
-
-    if (saleRows.length === 0) {
-      res.status(404).json({
+      res.status(500).json({
         success: false,
-        message: "Sale not found",
+        message: "Failed to delete sale",
       });
-    } else {
-      // Update the sale in the sales table
-      const [result] = await pool.query(
-        "UPDATE sales SET product_id = ?, qty = ?, tax_id = ?, discount_amt = ?, discount_percentage = ?, total = ?, customer_id = ?, sales_date = ?, payment_method = ? WHERE sale_id = ?",
-        [
-          product_id,
-          qty,
-          tax_id,
-          discount_amt,
-          discount_percentage,
-          total,
-          customer_id,
-          sales_date,
-          payment_method,
-          sale_id,
-        ]
-      );
-
-      if (result.affectedRows === 1) {
-        res.json({ success: true, message: "Sale updated successfully" });
-      } else {
-        res.status(500).json({
-          success: false,
-          message: "Failed to update sale",
-        });
-      }
     }
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
