@@ -29,8 +29,8 @@ const createSale = asyncHandler(async (req, res) => {
 
     // Insert the sale into the sales table with discount_amt and discount_percentage
     const [result] = await pool.query(
-      "INSERT INTO sales (products, sales_date, payment_method, total, discount_amt, discount_percentage) VALUES (?, ?, ?, ?, ?, ?)",
-      [productsJSON, sales_date, payment_method, total, req.body.discount_amt, req.body.discount_percentage]
+      "INSERT INTO sales (products, sales_date, payment_method, total, discount_amt, discount_percentage, tax_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [productsJSON, sales_date, payment_method, total, req.body.discount_amt, req.body.discount_percentage, req.body.tax_id]
     );
 
     if (result.affectedRows === 1) {
@@ -83,8 +83,8 @@ const editSale = asyncHandler(async (req, res) => {
 
     // Update the sale in the sales table with discount_amt and discount_percentage
     const [result] = await pool.query(
-      "UPDATE sales SET products = ?, sales_date = ?, payment_method = ?, total = ?, discount_amt = ?, discount_percentage = ? WHERE sale_id = ?",
-      [productsJSON, sales_date, payment_method, total, req.body.discount_amt, req.body.discount_percentage, sale_id]
+      "UPDATE sales SET products = ?, sales_date = ?, payment_method = ?, total = ?, discount_amt = ?, discount_percentage = ?, tax_id = ? WHERE sale_id = ?",
+      [productsJSON, sales_date, payment_method, total, req.body.discount_amt, req.body.discount_percentage, req.body.tax_id, sale_id]
     );
 
     if (result.affectedRows === 1) {

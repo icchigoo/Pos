@@ -22,7 +22,9 @@ const createSalesTable = async () => {
         discount_percentage DECIMAL(5, 2) NOT NULL,
         total DECIMAL(10, 2) NOT NULL,
         sales_date DATE NOT NULL,
-        payment_method VARCHAR(255) NOT NULL
+        payment_method VARCHAR(255) NOT NULL,
+        tax_id INT,
+        FOREIGN KEY (tax_id) REFERENCES tax(tax_id)
       )
     `;
     await pool.query(createTableQuery);
@@ -31,7 +33,6 @@ const createSalesTable = async () => {
     console.error("Error creating sales table:", error);
   }
 };
-
 
 // Export the function to create the sales table
 module.exports = {
